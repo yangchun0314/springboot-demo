@@ -1,0 +1,114 @@
+# ============================================
+# 流水线名称，显示在 Gitea Actions 页面
+# ============================================
+name: Java CI
+
+# ============================================
+# 触发条件：什么时候执行这个流水线
+# ============================================
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+# push: 每次推送代码时触发
+# pull_request: 每次创建/更新合并请求时触发
+
+# ============================================
+# 任务定义：流水线要执行哪些任务
+# ============================================
+jobs:
+ # ----------------------------------------
+ # build: 任务名称，可以自定义
+ # ----------------------------------------
+ build:
+   # ----------------------------------------
+   # 运行环境：在哪个操作系统上执行
+   # ----------------------------------------
+   runs-on: ubuntu-latest
+   # ubuntu-latest: 最新版 Ubuntu Linux
+   # 其他可选: windows-latest, macos-latest
+   
+   # ----------------------------------------
+   # 步骤：任务的具体执行步骤，按顺序执行
+   # ----------------------------------------
+   steps:
+     # ======================================
+     # 步骤1: 检出代码
+     # ======================================
+     - uses: actions/checkout@v4
+       # uses: 引用别人写好的 Action（复用代码）
+       # actions/checkout@v4: 官方提供的检出代码 Action，v4 是版本号
+       # 作用: 把仓库代码下载到运行环境中
+     
+     # ======================================
+     # 步骤2: 安装 JDK 21
+     # ======================================
+     - name: Set up JDK 21
+       # name: 步骤名称，显示在日志中
+       uses: actions/setup-java@v4
+       # 使用官方 Java 安装 Action
+       with:
+         # with: 给 Action 传参数
+         java-version: '21'
+         # 指定安装 Java 21
+         distribution: 'temurin'
+         # JDK 发行版: Eclipse Temurin（Adoptium）
+         # 其他可选: zulu, corretto, liberica
+     
+     # ======================================
+     # 步骤3: 缓存 Maven 依赖
+     # ======================================
+     - name: Cache Maven dependencies
+       uses: actions/cache@v4
+       # 使用官方缓存 Action
+       with:
+         path: ~/.m2
+         # 缓存路径: Maven 本地仓库目录
+         # ~/.m2 存放下载的 jar 包，下次构建直接用缓存，不用重新下载
+         
+         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+         # key: 缓存的唯一标识
+         # ${{ runner.os }}: 操作系统名称（ubuntu）
+         # ${{ hashFiles('**/pom.xml') }: 计算 pom.xml 文件的哈希值
+         # 当 pom.xml 变化时，哈希变化，缓存失效，重新下载依赖
+         
+         restore-keys: ${{ runner.os }}-m2
+         # 恢复缓存的备用 key
+         # 如果精确匹配不上，用这个前缀匹配旧缓存
+     
+     # ======================================
+     # 步骤4: Maven 编译打包
+     # ======================================
+     - name: Build with Maven
+       run: ./mvnw clean package
+       # run: 直接执行 shell 命令
+       # ./mvnw: 使用 Maven Wrapper（项目自带的 Maven）
+       # clean: 清理 target 目录
+       # package: 编译代码、运行测试、打包成 jar
+     
+     # ======================================
+     # 步骤5: 运行测试
+     # ======================================
+     - name: Run tests
+       run: ./mvnw test
+       # test: 运行 src/test 下的单元测试
+     
+     # ======================================
+     # 步骤6: 上传构建产物
+     # ======================================
+     - name: Upload build artifact
+       # if: 条件判断，满足条件才执行
+       if: github.ref == 'refs/heads/main'
+       # 只在 main 分支推送时执行
+       # github.ref: 当前分支引用
+       
+       uses: actions/upload-artifact@v4
+       # 使用官方上传产物 Action
+       with:
+         name: springboot-jar
+         # 产物名称，下载时显示
+         path: target/*.jar
+         # 上传的文件路径
+         # target/*.jar: 打包生成的 jar 文件
