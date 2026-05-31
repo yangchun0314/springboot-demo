@@ -114,34 +114,32 @@ jobs:
          # 上传的文件路径
          # target/*.jar: 打包生成的 jar 文件
      # ======================================
-     # 步骤7: 设置 Docker Buildx（新增）
+     # 步骤7: 登录 Docker Hub（新增）
      # ======================================
-     - name: Set up Docker Buildx
-       uses: docker/setup-buildx-action@v3
-       # Docker 官方提供的 Buildx 插件
-       # 用于构建多平台镜像，优化构建缓存
+     - name: Login to Docker Hub
+       uses: docker/login-action@v3
+       with:
+         username: ${{ secrets.DOCKER_USERNAME }}
+         password: ${{ secrets.DOCKER_PASSWORD }}
 
      # ======================================
-     # 步骤8: 构建 Docker 镜像（新增）
+     # 步骤8: 构建并推送 Docker 镜像（新增）
      # ======================================
-     - name: Build Docker image
-       run: |
-         docker build -t springboot-demo:${{ github.sha }} .
-         docker tag springboot-demo:${{ github.sha }} springboot-demo:latest
-       # docker build: 根据 Dockerfile 构建镜像
-       # -t: 指定镜像标签（tag）
-       # ${{ github.sha }}: GitHub 提供的变量，当前提交的哈希值
-       # .: 使用当前目录的 Dockerfile
-       # docker tag: 给镜像打额外标签
+     - name: Build and push Docker image
+       uses: docker/build-push-action@v5
+       with:
+         context: .
+         push: true
+         tags: |
+           ${{ secrets.DOCKER_USERNAME }}/yc:latest
+           ${{ secrets.DOCKER_USERNAME }}/yc:${{ github.sha }}
 
      # ======================================
      # 步骤9: 保存 Docker 镜像为文件（新增）
      # ======================================
      - name: Save Docker image
        run: |
-         docker save springboot-demo:latest > springboot-demo.tar
-       # docker save: 将镜像导出为 tar 文件
-       # 方便下载和传输
+         docker save ${{ secrets.DOCKER_USERNAME }}/yc:latest > springboot-demo.tar
 
      # ======================================
      # 步骤10: 上传 Docker 镜像产物（新增）
