@@ -131,7 +131,7 @@ jobs:
          context: .
          push: true
          tags: |
-           ${{ secrets.DOCKER_USERNAME }}/yc:latest
+           ${{ secrets.DOCKER_USERNAME }}/yc:springboot-demo
            ${{ secrets.DOCKER_USERNAME }}/yc:${{ github.sha }}
 
      # ======================================
@@ -139,7 +139,7 @@ jobs:
      # ======================================
      - name: Save Docker image
        run: |
-         docker save ${{ secrets.DOCKER_USERNAME }}/yc:latest > springboot-demo.tar
+         docker save ${{ secrets.DOCKER_USERNAME }}/yc:springboot-demo > springboot-demo.tar
 
      # ======================================
      # 步骤10: 上传 Docker 镜像产物（新增）
