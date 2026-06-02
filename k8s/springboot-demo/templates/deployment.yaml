@@ -1,3 +1,8 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-demo
+  namespace: default
 spec:
   selector:
     matchLabels:
