@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "springboot-demo.fullname" . }}
+  name: springboot-demo
   labels:
-    {{- include "springboot-demo.labels" . | nindent 4 }}
+    app: springboot-demo
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "springboot-demo.selectorLabels" . | nindent 6 }}
+      app: springboot-demo
   template:
     metadata:
       labels:
-        {{- include "springboot-demo.selectorLabels" . | nindent 8 }}
+        app: springboot-demo
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: app
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
