@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: springboot-demo
-  namespace: {{ .Release.Namespace }}
+  namespace: default
 spec:
   type: {{ .Values.service.type }}
   ports:

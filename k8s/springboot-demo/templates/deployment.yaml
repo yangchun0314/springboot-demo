@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: springboot-demo
-  namespace: {{ .Release.Namespace }}
+  namespace: default
   labels:
     app: springboot-demo
 spec:
