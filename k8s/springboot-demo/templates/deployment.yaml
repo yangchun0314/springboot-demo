@@ -12,6 +12,8 @@ spec:
     metadata:
       labels:
         app: springboot-demo
+        app.kubernetes.io/instance: springboot-demo
+        app.kubernetes.io/name: springboot-demo
     spec:
       containers:
         - name: app
