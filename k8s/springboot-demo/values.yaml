@@ -1,0 +1,28 @@
+replicaCount: 2
+
+image:
+  repository: yangchun3728/yc
+  pullPolicy: Always
+  tag: "springboot-demo"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: springboot.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
