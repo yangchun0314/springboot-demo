@@ -4,6 +4,7 @@ metadata:
   name: springboot-demo
   namespace: default
 spec:
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: springboot-demo
@@ -11,3 +12,17 @@ spec:
     metadata:
       labels:
         app: springboot-demo
+    spec:
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
