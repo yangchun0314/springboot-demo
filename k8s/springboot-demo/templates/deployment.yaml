@@ -1,12 +1,4 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: springboot-demo
-  namespace: default
-  labels:
-    app: springboot-demo
 spec:
-  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: springboot-demo
@@ -14,12 +6,3 @@ spec:
     metadata:
       labels:
         app: springboot-demo
-    spec:
-      containers:
-        - name: app
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - containerPort: {{ .Values.service.targetPort }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
