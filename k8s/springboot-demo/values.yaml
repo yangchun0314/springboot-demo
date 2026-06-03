@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 5
 
 image:
   repository: yangchun3728/yc
