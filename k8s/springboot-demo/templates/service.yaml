@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: springboot-demo
   namespace: default
+  labels:
+    app: springboot-demo
 spec:
   type: {{ .Values.service.type }}
   ports:
