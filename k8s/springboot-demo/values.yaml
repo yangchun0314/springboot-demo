@@ -11,13 +11,7 @@ service:
   targetPort: 8080
 
 ingress:
-  enabled: true
-  className: nginx
-  hosts:
-    - host: springboot.local
-      paths:
-        - path: /
-          pathType: Prefix
+  enabled: false
 
 resources:
   limits:
