@@ -3,7 +3,7 @@ replicaCount: 5
 image:
   repository: yangchun3728/yc
   pullPolicy: Always
-  tag: "5b913742d6ba809247f5b0e3d1935e265bd55cec"
+  tag: "56caf567c2993a5df251fe9fa88ccc58c8dfb0ac"
 
 service:
   type: ClusterIP
