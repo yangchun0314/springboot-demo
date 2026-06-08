@@ -9,6 +9,6 @@ public class TestController {
     @GetMapping("/test")
     public String test() {
         System.out.println("访问到我了");
-        return "恭喜您，成功了，版本3";
+        return "恭喜您，成功了，版本4";
     }
 }
